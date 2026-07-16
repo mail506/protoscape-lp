@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0c0c0a;
+  --ink-mid: #161614;
+  --border: #252520;
+  --gold: #c4a25a;
+  --gold-dim: rgba(196,162,90,0.12);
+  --steel: #5c7a96;
+  --cream: #f0ebe2;
+  --cream-border: #d8d3ca;
+  --text: #e2ddd4;
+  --muted: #6a6660;
+  --white: #ffffff;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--gold); }
+
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+/* ── NAV ── */
+#main-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid #eae6de;
+  padding: 0 48px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: box-shadow 0.4s ease;
+}
+#main-nav.scrolled { box-shadow: 0 4px 32px rgba(0,0,0,0.1); }
+
+.nav-logo { height: 32px; width: auto; mix-blend-mode: multiply; display: block; }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  align-items: center;
+}
+.nav-links a {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1a1a18;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--steel); }
+
+.nav-cta {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white) !important;
+  background: var(--ink);
+  padding: 10px 20px;
+  transition: background 0.2s;
+}
+.nav-cta:hover { background: var(--steel) !important; color: var(--white) !important; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+.hamburger span { display: block; width: 22px; height: 1px; background: #1a1a18; }
+
+.mobile-menu {
+  position: fixed;
+  top: 72px; left: 0; right: 0; bottom: 0;
+  background: var(--white);
+  flex-direction: column;
+  padding: 40px 24px;
+  gap: 0;
+  z-index: 99;
+  border-top: 1px solid #eae6de;
+  overflow-y: auto;
+}
+.mobile-menu a {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1a1a18;
+  padding: 18px 0;
+  border-bottom: 1px solid #eae6de;
+}
+.mobile-menu a:hover { color: var(--steel); }
+
+/* ── SECTION GLOBALS ── */
+section { position: relative; overflow: hidden; }
+
+.section-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-label::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+.section-label.on-light { color: var(--steel); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  padding-top: 72px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 48px;
+}
+.hero-coord {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  margin-bottom: 52px;
+  font-weight: 300;
+}
+.hero-h1 {
+  font-size: clamp(60px, 9vw, 120px);
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  line-height: 1.0;
+}
+.hero-h1 em { font-style: italic; color: var(--gold); }
+.hero-sub {
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 80px;
+}
+.hero-meta {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.hero-meta-item {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.hero-meta-lbl {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.hero-meta-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text);
+}
+.hero-reticle {
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 180px;
+  height: 180px;
+  opacity: 0.12;
+  color: var(--text);
+  pointer-events: none;
+}
+
+/* ── ABOUT ── */
+#about {
+  padding: 120px 48px;
+  background: var(--ink-mid);
+  border-top: 1px solid var(--border);
+}
+.about-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.about-text h2 {
+  font-size: clamp(36px, 4vw, 58px);
+  color: var(--text);
+  margin-bottom: 32px;
+  line-height: 1.15;
+}
+.about-text p {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--muted);
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+.about-text strong { color: var(--text); font-weight: 400; }
+.about-stats { display: flex; flex-direction: column; gap: 0; padding-top: 24px; }
+.about-stat {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+}
+.about-stat:first-child { border-top: 1px solid var(--border); }
+.about-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  min-width: 80px;
+}
+.about-stat-label {
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.about-stat-label strong { display: block; font-size: 14px; color: var(--text); font-weight: 400; margin-bottom: 2px; }
+
+/* ── DOMAIN ── */
+#domain {
+  padding: 120px 48px;
+  background: var(--ink);
+  border-top: 1px solid var(--border);
+}
+.domain-inner { max-width: 1200px; margin: 0 auto; }
+.domain-header { margin-bottom: 60px; max-width: 580px; }
+.domain-header h2 {
+  font-size: clamp(32px, 4vw, 52px);
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.domain-header p { font-size: 15px; color: var(--muted); line-height: 1.75; font-weight: 300; }
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+}
+.domain-card {
+  background: var(--ink);
+  padding: 44px 36px;
+  transition: background 0.3s;
+}
+.domain-card:hover { background: var(--ink-mid); }
+.domain-num {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+.domain-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.domain-text { font-size: 13px; color: var(--muted); line-height: 1.75; font-weight: 300; }
+
+/* ── PROJECT / THE VAULT ── */
+#project {
+  padding: 120px 48px;
+  background: var(--ink-mid);
+  border-top: 1px solid var(--border);
+}
+.project-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.project-codename {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: block;
+  font-weight: 500;
+}
+.project-left h2 {
+  font-size: clamp(40px, 5vw, 72px);
+  color: var(--text);
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+.project-left p {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--muted);
+  margin-bottom: 16px;
+  font-weight: 300;
+}
+.nda-box {
+  margin-top: 36px;
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  background: var(--gold-dim);
+}
+.nda-box strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 10px;
+}
+.nda-box p { font-size: 13px; color: var(--muted); line-height: 1.7; margin: 0; font-weight: 300; }
+.spec-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  padding-top: 8px;
+}
+.spec-row {
+  background: var(--ink-mid);
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.spec-key {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.spec-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  color: var(--text);
+  text-align: right;
+}
+.spec-val.redacted {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--border);
+  background: var(--border);
+  padding: 3px 10px;
+  user-select: none;
+}
+
+/* ── FOR COLLECTORS ── */
+#collectors {
+  padding: 120px 48px;
+  background: var(--cream);
+  border-top: 1px solid var(--cream-border);
+}
+#collectors h2, #collectors h3 { color: var(--ink); }
+.collectors-inner { max-width: 1200px; margin: 0 auto; }
+.collectors-header { max-width: 680px; margin-bottom: 72px; }
+.collectors-header h2 {
+  font-size: clamp(36px, 5vw, 68px);
+  color: var(--ink);
+  margin-bottom: 24px;
+  line-height: 1.1;
+}
+.collectors-header p { font-size: 16px; color: #5a5550; line-height: 1.85; font-weight: 300; }
+.collector-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin-bottom: 72px;
+}
+.collector-card {
+  border-top: 2px solid var(--steel);
+  padding-top: 24px;
+}
+.collector-cat {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.collector-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+.collector-desc { font-size: 12px; color: #7a7570; line-height: 1.75; font-weight: 300; }
+.collectors-pullquote {
+  border-top: 1px solid var(--cream-border);
+  padding-top: 56px;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+.collectors-pullquote blockquote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 3vw, 42px);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+.collectors-pullquote cite {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--steel);
+  font-style: normal;
+}
+
+/* ── PARTNERSHIP ── */
+#partnership {
+  padding: 120px 48px;
+  background: var(--ink);
+  border-top: 1px solid var(--border);
+}
+.partnership-inner { max-width: 1200px; margin: 0 auto; }
+.partnership-header { max-width: 580px; margin-bottom: 64px; }
+.partnership-header h2 {
+  font-size: clamp(32px, 4vw, 56px);
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.partnership-header p { font-size: 15px; color: var(--muted); line-height: 1.75; font-weight: 300; }
+.partner-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  background: var(--border);
+  margin-bottom: 48px;
+}
+.partner-card {
+  background: var(--ink);
+  padding: 44px 40px;
+  transition: background 0.3s;
+}
+.partner-card:hover { background: var(--ink-mid); }
+.partner-en {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.partner-ja {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.partner-desc { font-size: 13px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+.partner-cta {
+  text-align: center;
+  padding: 52px 48px;
+  border: 1px solid var(--border);
+}
+.partner-cta p { font-size: 15px; color: var(--muted); margin-bottom: 28px; font-weight: 300; line-height: 1.7; }
+.btn-gold {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--gold);
+  padding: 15px 36px;
+  transition: background 0.2s;
+}
+.btn-gold:hover { background: #d4b070; color: var(--ink); }
+
+/* ── COMPANY ── */
+#company {
+  padding: 120px 48px;
+  background: var(--ink-mid);
+  border-top: 1px solid var(--border);
+}
+.company-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.company-left h2 {
+  font-size: clamp(32px, 4vw, 52px);
+  color: var(--text);
+  margin-bottom: 48px;
+}
+.co-table { width: 100%; border-collapse: collapse; }
+.co-table tr { border-bottom: 1px solid var(--border); }
+.co-table td { padding: 17px 0; vertical-align: top; }
+.co-table td:first-child {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  width: 42%;
+  padding-right: 16px;
+  padding-top: 20px;
+}
+.co-table td:last-child {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  color: var(--text);
+}
+.company-right { padding-top: 0; }
+.company-right h3 {
+  font-size: 28px;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.company-right p { font-size: 15px; color: var(--muted); line-height: 1.85; margin-bottom: 20px; font-weight: 300; }
+
+/* ── CONTACT ── */
+#contact {
+  padding: 120px 48px;
+  background: var(--ink);
+  border-top: 1px solid var(--border);
+}
+.contact-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 80px;
+  align-items: start;
+}
+.contact-left h2 {
+  font-size: clamp(32px, 4vw, 52px);
+  color: var(--text);
+  margin-bottom: 24px;
+}
+.contact-left p { font-size: 14px; color: var(--muted); line-height: 1.75; font-weight: 300; margin-bottom: 10px; }
+.contact-details { margin-top: 40px; display: flex; flex-direction: column; gap: 20px; }
+.contact-detail-lbl { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.contact-detail-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  color: var(--text);
+}
+#contact-form { display: flex; flex-direction: column; gap: 2px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.fgroup { display: flex; flex-direction: column; gap: 0; }
+.flabel {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 16px 0;
+  background: var(--ink-mid);
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.finput, .fselect, .ftextarea {
+  background: var(--ink-mid);
+  border: 1px solid var(--border);
+  border-top: none;
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 12px 16px 14px;
+  outline: none;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.2s;
+}
+.finput:focus, .fselect:focus, .ftextarea:focus { border-color: var(--gold); }
+.ftextarea { height: 130px; resize: vertical; }
+.fsubmit {
+  margin-top: 2px;
+  width: 100%;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--gold);
+  border: none;
+  padding: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.fsubmit:hover { background: #d4b070; }
+
+/* ── FOOTER ── */
+footer {
+  padding: 48px;
+  background: #080806;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.footer-wordmark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+.footer-right { text-align: right; }
+.footer-tagline {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.footer-copy { font-size: 11px; color: #3a3a36; letter-spacing: 0.08em; }
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-coord { animation: heroIn 0.9s ease 0.1s both; }
+.hero-h1    { animation: heroIn 0.9s ease 0.25s both; }
+.hero-sub   { animation: heroIn 0.9s ease 0.4s both; }
+.hero-meta  { animation: heroIn 0.9s ease 0.6s both; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 920px) {
+  #main-nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .about-inner, .project-inner, .company-inner, .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+  .domain-grid { grid-template-columns: 1fr; }
+  .partner-grid { grid-template-columns: 1fr; }
+  .collector-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row-2 { grid-template-columns: 1fr; }
+  #hero, #about, #domain, #project, #collectors, #partnership, #company, #contact {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  footer { padding: 36px 24px; }
+  .hero-reticle { display: none; }
+  .spec-table { padding-top: 0; }
+}
+@media (max-width: 560px) {
+  .collector-grid { grid-template-columns: 1fr; }
+  .partner-cta { padding: 36px 24px; }
+}
+</style>
+</helmet>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#hero" style="display: flex; align-items: center; text-decoration: none;">
+    <svg height="30" viewBox="0 0 320 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="PROTOSCAPE">
+      <text x="0" y="30" font-family="'Space Grotesk', sans-serif" font-size="22" font-weight="500" letter-spacing="6" fill="#1a1a18">PROTOSCAPE</text>
+      <line x1="0" y1="36" x2="310" y2="36" stroke="#c4a25a" stroke-width="1" opacity="0.5"></line>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#domain">Domain</a></li>
+    <li><a href="#project">Project</a></li>
+    <li><a href="#collectors">Collectors</a></li>
+    <li><a href="#partnership">Partnership</a></li>
+    <li><a href="#company">Company</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <button class="hamburger" onClick="{{ toggleMenu }}" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" style="{{ mobileMenuStyle }}">
+  <a href="#about"       onClick="{{ closeMenu }}">About</a>
+  <a href="#domain"      onClick="{{ closeMenu }}">Domain</a>
+  <a href="#project"     onClick="{{ closeMenu }}">Project</a>
+  <a href="#collectors"  onClick="{{ closeMenu }}">Collectors</a>
+  <a href="#partnership" onClick="{{ closeMenu }}">Partnership</a>
+  <a href="#company"     onClick="{{ closeMenu }}">Company</a>
+  <a href="#contact"     onClick="{{ closeMenu }}">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <p class="hero-coord">N31°36′ &nbsp;/&nbsp; E130°33′ &mdash; KAGOSHIMA, JAPAN</p>
+    <h1 class="hero-h1">Engineering<br><em>the Scape.</em></h1>
+    <p class="hero-sub">PROTOSCAPE &ensp;&mdash;&ensp; Hardware Studio &ensp;&mdash;&ensp; Est. 2026</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <p class="hero-meta-lbl">Founded</p>
+        <p class="hero-meta-val">January 2026</p>
+      </div>
+      <div class="hero-meta-item">
+        <p class="hero-meta-lbl">Location</p>
+        <p class="hero-meta-val">Kagoshima, Japan</p>
+      </div>
+      <div class="hero-meta-item">
+        <p class="hero-meta-lbl">Director</p>
+        <p class="hero-meta-val">Hiroshi Kuroyama</p>
+      </div>
+    </div>
+  </div>
+  <svg class="hero-reticle" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="80" stroke="currentColor" stroke-width="0.6"></circle>
+    <circle cx="100" cy="100" r="40" stroke="currentColor" stroke-width="0.6"></circle>
+    <circle cx="100" cy="100" r="5" fill="currentColor"></circle>
+    <line x1="100" y1="0" x2="100" y2="200" stroke="currentColor" stroke-width="0.6"></line>
+    <line x1="0" y1="100" x2="200" y2="100" stroke="currentColor" stroke-width="0.6"></line>
+    <line x1="20" y1="20" x2="42" y2="42" stroke="currentColor" stroke-width="0.6"></line>
+    <line x1="180" y1="20" x2="158" y2="42" stroke="currentColor" stroke-width="0.6"></line>
+    <line x1="20" y1="180" x2="42" y2="158" stroke="currentColor" stroke-width="0.6"></line>
+    <line x1="180" y1="180" x2="158" y2="158" stroke="currentColor" stroke-width="0.6"></line>
+  </svg>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-text">
+      <p class="section-label">About</p>
+      <h2>Where the workshop<br>meets the living room.</h2>
+      <p>PROTOSCAPEは、<strong>精密工学とインテリアデザインの交点</strong>に位置するハードウェアスタジオです。2026年1月、鹿児島にて設立。</p>
+      <p>私たちは「工業的な強さ」と「室内の繊細さ」を両立させたプロダクトを開発しています。道具としての精度と、コレクターズアイテムとしての美しさ——その二つを妥協なく追求します。</p>
+      <p>We build objects that belong equally in a precision engineer's workshop and a collector's private study.</p>
+    </div>
+    <div class="about-stats reveal">
+      <div class="about-stat">
+        <span class="about-stat-num">2026</span>
+        <div class="about-stat-label"><strong>設立年</strong>鹿児島を拠点とする独立系スタジオ</div>
+      </div>
+      <div class="about-stat">
+        <span class="about-stat-num">01</span>
+        <div class="about-stat-label"><strong>Active Project</strong>スマートショーケースの開発</div>
+      </div>
+      <div class="about-stat">
+        <span class="about-stat-num">∞</span>
+        <div class="about-stat-label"><strong>Uncompromised</strong>品質と精度への妥協なき追求</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUSINESS DOMAIN -->
+<section id="domain">
+  <div class="domain-inner">
+    <div class="domain-header reveal">
+      <p class="section-label">Business Domain</p>
+      <h2>Engineering intelligent display.</h2>
+      <p>富裕層コレクター向けのスマートショーケース開発を中心に、ハードウェア設計から量産支援までを手がけるスタジオです。</p>
+    </div>
+    <div class="domain-grid">
+      <div class="domain-card reveal">
+        <p class="domain-num">01</p>
+        <h3 class="domain-title">Smart Showcase<br>Development</h3>
+        <p class="domain-text">コレクターズアイテムの展示・保管・管理を統合したインテリジェント収納システムの研究・開発。ラグジュアリーマーケットに向けたハードウェアプロダクトを創出します。</p>
+      </div>
+      <div class="domain-card reveal reveal-delay-1">
+        <p class="domain-num">02</p>
+        <h3 class="domain-title">Luxury Collector<br>Market</h3>
+        <p class="domain-text">時計・万年筆・カメラ・芸術品などの高価値コレクターアイテムを所有する富裕層顧客を対象とし、その審美眼に応える製品体験を設計します。</p>
+      </div>
+      <div class="domain-card reveal reveal-delay-2">
+        <p class="domain-num">03</p>
+        <h3 class="domain-title">Hardware ×<br>Interior Design</h3>
+        <p class="domain-text">工業製品としての機能性と、インテリアオブジェとしての存在感を同時に実現。空間に置かれたとき、その物体が語る物語を設計します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT / THE VAULT -->
+<section id="project">
+  <div class="project-inner">
+    <div class="project-left reveal">
+      <p class="section-label">Current Project</p>
+      <span class="project-codename">Codename</span>
+      <h2>The Vault</h2>
+      <p>現在開発中のフラッグシッププロダクト。富裕層コレクター向けに設計されたスマートショーケースです。</p>
+      <p>素材・機構・電子システムのすべてにおいて、妥協のない仕様を追求しています。詳細は現時点では非公開としています。</p>
+      <div class="nda-box">
+        <strong>NDA Required</strong>
+        <p>製品仕様・部品構成・機構設計・外観デザインの詳細は、秘密保持契約（NDA）締結後にのみ開示いたします。製造パートナーおよび投資家の方はお問い合わせください。</p>
+      </div>
+    </div>
+    <div class="spec-table reveal reveal-delay-1">
+      <div class="spec-row">
+        <span class="spec-key">Category</span>
+        <span class="spec-val">Smart Showcase</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Codename</span>
+        <span class="spec-val">The Vault</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Status</span>
+        <span class="spec-val">In Development</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Materials</span>
+        <span class="spec-val redacted">NDA REQUIRED</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Mechanism</span>
+        <span class="spec-val redacted">NDA REQUIRED</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Electronics</span>
+        <span class="spec-val redacted">NDA REQUIRED</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Dimensions</span>
+        <span class="spec-val redacted">NDA REQUIRED</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Launch</span>
+        <span class="spec-val">TBA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR COLLECTORS -->
+<section id="collectors">
+  <div class="collectors-inner">
+    <div class="collectors-header reveal">
+      <p class="section-label on-light">For Collectors</p>
+      <h2>Your collection deserves a worthy home.</h2>
+      <p>数十年をかけて集めたコレクションは、ただ「しまわれる」べきではありません。The Vaultは、所有する喜びを毎日の体験に変えるために設計されています。</p>
+    </div>
+    <div class="collector-grid">
+      <div class="collector-card reveal">
+        <p class="collector-cat">Horology</p>
+        <h3 class="collector-name">Timepieces &amp;<br>Watches</h3>
+        <p class="collector-desc">機械式時計から複雑機構まで。湿度・温度管理を備えた環境で、あなたの時計コレクションを最高の状態に保ちます。</p>
+      </div>
+      <div class="collector-card reveal reveal-delay-1">
+        <p class="collector-cat">Writing</p>
+        <h3 class="collector-name">Fountain Pens &amp;<br>Fine Stationery</h3>
+        <p class="collector-desc">希少な万年筆や限定インクのコレクション。光と影を計算した展示で、筆記具が持つ工芸品としての美しさを引き出します。</p>
+      </div>
+      <div class="collector-card reveal reveal-delay-2">
+        <p class="collector-cat">Optical</p>
+        <h3 class="collector-name">Cameras &amp;<br>Lenses</h3>
+        <p class="collector-desc">フィルムカメラから現代の光学機器まで。精密機器としての質感と歴史が、空間の中で新たな意味を持ちます。</p>
+      </div>
+      <div class="collector-card reveal reveal-delay-3">
+        <p class="collector-cat">Objets d'Art</p>
+        <h3 class="collector-name">Art Objects &amp;<br>Curiosities</h3>
+        <p class="collector-desc">小型彫刻・メダル・コインから稀少なオブジェまで。コレクターの個性を語るキャビネット・オブ・キュリオシティを実現します。</p>
+      </div>
+    </div>
+    <div class="collectors-pullquote reveal">
+      <blockquote>"A collection without a worthy stage is a story without a page."</blockquote>
+      <cite>PROTOSCAPE &ensp;&mdash;&ensp; Design Philosophy</cite>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERSHIP -->
+<section id="partnership">
+  <div class="partnership-inner">
+    <div class="partnership-header reveal">
+      <p class="section-label">Partnership</p>
+      <h2>製造パートナー募集</h2>
+      <p>PROTOSCAPEは現在、The Vaultの量産に向けた製造パートナーを探しています。高い技術水準とクラフトマンシップを持つ企業・職人との長期的な協業を希望します。</p>
+    </div>
+    <div class="partner-grid">
+      <div class="partner-card reveal">
+        <p class="partner-en">Metal Fabrication</p>
+        <h3 class="partner-ja">金属加工</h3>
+        <p class="partner-desc">精密板金・切削加工・表面仕上げ。ラグジュアリー品位に応える精度と美しさを持つ金属部品の製造パートナーを求めています。アルミ・ステンレス・真鍮等の実績があれば歓迎。</p>
+      </div>
+      <div class="partner-card reveal reveal-delay-1">
+        <p class="partner-en">Mechanical Engineering</p>
+        <h3 class="partner-ja">機構設計</h3>
+        <p class="partner-desc">精密な動作機構の設計・製造。ヒンジ・スライド・アクチュエーションなど、滑らかで高耐久な機構設計の経験を持つパートナーを募集します。</p>
+      </div>
+      <div class="partner-card reveal reveal-delay-1">
+        <p class="partner-en">Electrical Engineering</p>
+        <h3 class="partner-ja">電気設計</h3>
+        <p class="partner-desc">組込みシステム・センサー統合・IoT連携。ハードウェアに知性を与える回路設計・ファームウェア開発のパートナーを求めています。</p>
+      </div>
+      <div class="partner-card reveal reveal-delay-2">
+        <p class="partner-en">Packaging &amp; Logistics</p>
+        <h3 class="partner-ja">梱包・物流</h3>
+        <p class="partner-desc">ラグジュアリープロダクトに相応しいアンボクシング体験の設計・実装、および全国配送・輸出に対応できる物流パートナーを募集します。</p>
+      </div>
+    </div>
+    <div class="partner-cta reveal">
+      <p>詳細仕様はNDA締結後にご提示します。まずはお気軽にお問い合わせください。</p>
+      <a href="#contact" class="btn-gold">お問い合わせ / Inquire</a>
+    </div>
+  </div>
+</section>
+
+<!-- COMPANY -->
+<section id="company">
+  <div class="company-inner">
+    <div class="company-left reveal">
+      <p class="section-label">Company</p>
+      <h2>会社概要</h2>
+      <table class="co-table">
+        <tbody>
+          <tr>
+            <td>会社名</td>
+            <td>PROTOSCAPE</td>
+          </tr>
+          <tr>
+            <td>所在地</td>
+            <td>Kagoshima, Japan</td>
+          </tr>
+          <tr>
+            <td>設立</td>
+            <td>2026年1月</td>
+          </tr>
+          <tr>
+            <td>代表者</td>
+            <td>黒山 裕志<br><span style="font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--muted); font-weight: 300;">Hiroshi Kuroyama</span></td>
+          </tr>
+          <tr>
+            <td>電話</td>
+            <td><a href="tel:09075335999" style="color: var(--text);">090-7533-5999</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="company-right reveal reveal-delay-1">
+      <h3>Our Mission</h3>
+      <p>工業生産の論理と、インテリアデザインの感性を統合し、これまでに存在しなかったカテゴリーのプロダクトを世界に送り出すこと。</p>
+      <p>PROTOSCAPEは、鹿児島という地から、グローバルな富裕層コレクター市場に向けて、妥協のないハードウェアを開発するスタジオです。</p>
+      <p style="margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.8;">現在、製造パートナー・機関投資家・メディア関係者からのコンタクトを受け付けています。詳細仕様はNDA締結後に開示いたします。</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-left reveal">
+      <p class="section-label">Contact</p>
+      <h2>Get in touch.</h2>
+      <p>製品についてのお問い合わせ、製造パートナーシップ、メディア取材など、お気軽にご連絡ください。</p>
+      <p>詳細仕様はNDA締結後にご共有します。</p>
+      <div class="contact-details">
+        <div>
+          <p class="contact-detail-lbl">Tel</p>
+          <p class="contact-detail-val"><a href="tel:09075335999" style="color: var(--text);">090-7533-5999</a></p>
+        </div>
+        <div>
+          <p class="contact-detail-lbl">Location</p>
+          <p class="contact-detail-val">Kagoshima, Japan</p>
+        </div>
+      </div>
+    </div>
+    <form id="contact-form" onSubmit="{{ handleSubmit }}" class="reveal reveal-delay-1">
+      <input type="hidden" name="access_key" value="010a861f-4c47-4487-a1f0-771cffe67aff">
+      <input type="hidden" name="subject" value="【Protoscape お問い合わせ】">
+      <input type="hidden" name="from_name" value="Protoscape Website">
+      <div class="form-row-2">
+        <div class="fgroup">
+          <label class="flabel" for="f-name">お名前 / Name</label>
+          <input class="finput" type="text" id="f-name" name="name" placeholder="山田 太郎">
+        </div>
+        <div class="fgroup">
+          <label class="flabel" for="f-company">会社・組織名</label>
+          <input class="finput" type="text" id="f-company" name="company" placeholder="株式会社〇〇">
+        </div>
+      </div>
+      <div class="fgroup">
+        <label class="flabel" for="f-email">メールアドレス / Email</label>
+        <input class="finput" type="email" id="f-email" name="email" placeholder="your@email.com">
+      </div>
+      <div class="fgroup">
+        <label class="flabel" for="f-type">お問い合わせ種別 / Inquiry Type</label>
+        <select class="fselect" id="f-type" name="inquiry_type">
+          <option value="">選択してください / Please select</option>
+          <option value="collector">コレクター製品について / Collector Product</option>
+          <option value="partner">製造パートナーシップ / Manufacturing Partnership</option>
+          <option value="investment">投資・出資 / Investment</option>
+          <option value="press">メディア・取材 / Press &amp; Media</option>
+          <option value="other">その他 / Other</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <label class="flabel" for="f-message">メッセージ / Message</label>
+        <textarea class="ftextarea" id="f-message" name="message" placeholder="ご用件をご記入ください。&#10;Please describe your inquiry."></textarea>
+      </div>
+      <div style="{{ formSuccessStyle }}; background: rgba(196,162,90,0.1); border: 1px solid var(--gold); padding: 16px 20px; margin-bottom: 16px; font-size: 13px; color: var(--gold); letter-spacing: 0.05em;">
+        ✓ &ensp;お問い合わせを受け付けました。ありがとうございます。 / Thank you — your message has been sent.
+      </div>
+      <div style="{{ formErrorStyle }}; background: rgba(180,60,60,0.1); border: 1px solid #b43c3c; padding: 16px 20px; margin-bottom: 16px; font-size: 13px; color: #d47070; letter-spacing: 0.05em;">
+        {{ formErrorMsg }}
+      </div>
+      <button type="submit" class="fsubmit" style="{{ submitStyle }}" disabled="{{ submitDisabled }}">{{ submitLabel }}</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <p class="footer-wordmark">PROTOSCAPE</p>
+  </div>
+  <div class="footer-right">
+    <p class="footer-tagline">Engineering the Scape.</p>
+    <p class="footer-copy">&copy; 2026 PROTOSCAPE. All rights reserved.</p>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { menuOpen: false, formSent: false, formSending: false, formError: null };
+
+  componentDidMount() {
+    // Scroll reveal via IntersectionObserver
+    const reveals = document.querySelectorAll('.reveal');
+    this._observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => this._observer.observe(el));
+
+    // Nav shadow on scroll
+    this._onScroll = () => {
+      const nav = document.getElementById('main-nav');
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 60);
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+  }
+
+  componentWillUnmount() {
+    if (this._observer) this._observer.disconnect();
+    window.removeEventListener('scroll', this._onScroll);
+  }
+
+  renderVals() {
+    const { menuOpen, formSent, formSending, formError } = this.state;
+    return {
+      mobileMenuStyle: { display: menuOpen ? 'flex' : 'none' },
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+
+      // Contact form
+      submitLabel: formSent ? '送信完了 ✓ / Sent' : (formSending ? '送信中… / Sending…' : '送信する  /  Send Message'),
+      submitDisabled: formSent || formSending,
+      submitStyle: formSent ? { background: '#4a7a5a', cursor: 'default' } : {},
+      formSuccessStyle: { display: formSent ? 'block' : 'none' },
+      formErrorStyle: { display: formError ? 'block' : 'none' },
+      formErrorMsg: formError || '',
+
+      handleSubmit: async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const name = form.querySelector('#f-name').value.trim();
+        const email = form.querySelector('#f-email').value.trim();
+        const message = form.querySelector('#f-message').value.trim();
+
+        if (!name || !email || !message) {
+          this.setState({ formError: 'お名前・メールアドレス・メッセージは必須です。 / Name, email and message are required.' });
+          return;
+        }
+
+        this.setState({ formSending: true, formError: null });
+
+        try {
+          const data = new FormData(form);
+          const res = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: data
+          });
+          const json = await res.json();
+          if (json.success) {
+            this.setState({ formSent: true, formSending: false });
+            form.reset();
+          } else {
+            this.setState({ formSending: false, formError: '送信に失敗しました。しばらくしてからお試しください。 / Submission failed. Please try again later.' });
+          }
+        } catch (_) {
+          this.setState({ formSending: false, formError: '通信エラーが発生しました。 / A network error occurred.' });
+        }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
