@@ -1086,10 +1086,10 @@ footer {
         <label class="flabel" for="f-message">メッセージ / Message</label>
         <textarea class="ftextarea" id="f-message" name="message" placeholder="ご用件をご記入ください。&#10;Please describe your inquiry."></textarea>
       </div>
-      <div style="{{ formSuccessStyle }}; background: rgba(196,162,90,0.1); border: 1px solid var(--gold); padding: 16px 20px; margin-bottom: 16px; font-size: 13px; color: var(--gold); letter-spacing: 0.05em;">
+      <div style="{{ formSuccessStyle }}">
         ✓ &ensp;お問い合わせを受け付けました。ありがとうございます。 / Thank you — your message has been sent.
       </div>
-      <div style="{{ formErrorStyle }}; background: rgba(180,60,60,0.1); border: 1px solid #b43c3c; padding: 16px 20px; margin-bottom: 16px; font-size: 13px; color: #d47070; letter-spacing: 0.05em;">
+      <div style="{{ formErrorStyle }}">
         {{ formErrorMsg }}
       </div>
       <button type="submit" class="fsubmit" style="{{ submitStyle }}" disabled="{{ submitDisabled }}">{{ submitLabel }}</button>
@@ -1148,8 +1148,26 @@ class Component extends DCLogic {
       submitLabel: formSent ? '送信完了 ✓ / Sent' : (formSending ? '送信中… / Sending…' : '送信する  /  Send Message'),
       submitDisabled: formSent || formSending,
       submitStyle: formSent ? { background: '#4a7a5a', cursor: 'default' } : {},
-      formSuccessStyle: { display: formSent ? 'block' : 'none' },
-      formErrorStyle: { display: formError ? 'block' : 'none' },
+      formSuccessStyle: {
+        display: formSent ? 'block' : 'none',
+        background: 'rgba(196,162,90,0.1)',
+        border: '1px solid var(--gold)',
+        padding: '16px 20px',
+        marginBottom: '16px',
+        fontSize: '13px',
+        color: 'var(--gold)',
+        letterSpacing: '0.05em'
+      },
+      formErrorStyle: {
+        display: formError ? 'block' : 'none',
+        background: 'rgba(180,60,60,0.1)',
+        border: '1px solid #b43c3c',
+        padding: '16px 20px',
+        marginBottom: '16px',
+        fontSize: '13px',
+        color: '#d47070',
+        letterSpacing: '0.05em'
+      },
       formErrorMsg: formError || '',
 
       handleSubmit: async (e) => {
